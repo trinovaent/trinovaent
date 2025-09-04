@@ -127,12 +127,13 @@ h2 {
 
 .service-card {
   background-color: #fff;
-  border-radius: 8px;
+  border-radius: 12px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  padding: 1.5rem;
+  padding: 2rem 1.5rem;
   flex: 1 1 280px;
   max-width: 300px;
   text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .service-card h3 {
@@ -140,11 +141,27 @@ h2 {
   margin-bottom: 0.5rem;
   color: #0077b6;
 }
+.service-card:hover {
+  transform: translateY(-10px) scale(1.05);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+}
 
 .service-card p {
   font-size: 0.95rem;
 }
+/* Icon styling */
+.service-card .icon {
+  width: 60px;
+  height: 60px;
+  margin: 0 auto 1rem;
+  fill: #0077b6;
+  transition: transform 0.3s ease, fill 0.3s ease;
+}
 
+.service-card:hover .icon {
+  transform: scale(1.2);
+  fill: #ff8c00;
+}
 /* About section */
 .about {
   background-color: #fff;

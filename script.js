@@ -1,4 +1,18 @@
-// Particle background
+// === Preloader: reveal page ===
+(function(){
+  let revealed = false;
+  function reveal(){
+    if(revealed) return;
+    revealed = true;
+    document.body.classList.add('loaded');
+  }
+  window.addEventListener('load', () => {
+    setTimeout(reveal, 650); // allow the logo + progress bar to finish
+  });
+  setTimeout(reveal, 3500); // safety fallback in case load is slow
+})();
+
+// === Particle background (hero) ===
 (function(){
   const canvas = document.getElementById('particles');
   if(!canvas) return;
@@ -29,7 +43,7 @@
     const w = canvas.width/dpr, h = canvas.height/dpr;
     ctx.clearRect(0,0,w,h);
 
-    // connecting lines
+    // light connecting lines
     for(let i=0;i<N;i++){
       const a = parts[i];
       for(let j=i+1;j<N;j++){
@@ -56,8 +70,9 @@
   step();
 })();
 
-// Hamburger toggle for mobile (click); desktop uses hover via CSS
+// === UI Interactions ===
 document.addEventListener('DOMContentLoaded', () => {
+  // 1) Hamburger toggle for mobile (click); desktop uses CSS hover
   const nav = document.querySelector('header nav');
   const icon = document.querySelector('.menu-icon');
   if (nav && icon) {
@@ -68,7 +83,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.addEventListener('click', () => nav.classList.remove('nav-open'));
   }
 
-  // Service cards fly-in (repeats on scroll) with stagger
+  // 2) Service cards fly-in (repeats when scrolled into view) with 0.2s stagger
   const cards = document.querySelectorAll('.service-card');
   if (cards.length) {
     const io = new IntersectionObserver((entries) => {
@@ -90,14 +105,14 @@ document.addEventListener('DOMContentLoaded', () => {
     cards.forEach(c => io.observe(c));
   }
 
-  // Memory Game
-  const startBtn = document.getElementById('gameStart');
-  const grid = document.getElementById('memoryGrid');
-  const timeEl = document.getElementById('time');
-  const matchesEl = document.getElementById('matches');
-  const resultEl = document.getElementById('gameResult');
-  const messageEl = document.getElementById('gameMessage');
-  const playAgain = document.getElementById('playAgain');
+  // 3) Memory Match Game
+  const startBtn   = document.getElementById('gameStart');
+  const grid       = document.getElementById('memoryGrid');
+  const timeEl     = document.getElementById('time');
+  const matchesEl  = document.getElementById('matches');
+  const resultEl   = document.getElementById('gameResult');
+  const messageEl  = document.getElementById('gameMessage');
+  const playAgain  = document.getElementById('playAgain');
 
   const symbols = ['📦','🚚','💻','🌐','🛒','🔒']; // trading, logistics, web, hosting, ecommerce, security
   let deck = [];
@@ -127,10 +142,17 @@ document.addEventListener('DOMContentLoaded', () => {
       const inner = document.createElement('div');
       inner.className = 'card-inner';
 
-      const front = document.createElement('div'); front.className = 'card-face card-front'; front.textContent = '• •';
-      const back  = document.createElement('div'); back.className  = 'card-face card-back';  back.textContent  = card.sym;
+      const front = document.createElement('div');
+      front.className = 'card-face card-front';
+      front.textContent = '• •';
 
-      inner.appendChild(front); inner.appendChild(back); el.appendChild(inner);
+      const back  = document.createElement('div');
+      back.className  = 'card-face card-back';
+      back.textContent  = card.sym;
+
+      inner.appendChild(front);
+      inner.appendChild(back);
+      el.appendChild(inner);
       grid.appendChild(el);
     });
   }
@@ -166,18 +188,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const card = deck.find(c => c.id === id);
     if(card.matched) return;
 
-    // flip
     if(el.classList.contains('flipped')) return;
     el.classList.add('flipped');
 
     if(!first){
       first = {el, card};
     }else{
-      // second choice
       lock = true;
       const second = {el, card};
       if(first.card.sym === second.card.sym){
-        // match
         first.card.matched = second.card.matched = true;
         first.el.classList.add('matched');
         second.el.classList.add('matched');
@@ -185,7 +204,6 @@ document.addEventListener('DOMContentLoaded', () => {
         first = null; lock = false;
         if(matches === symbols.length){ endGame(true); }
       }else{
-        // no match -> flip back
         setTimeout(() => {
           first.el.classList.remove('flipped');
           second.el.classList.remove('flipped');
@@ -199,7 +217,7 @@ document.addEventListener('DOMContentLoaded', () => {
     grid.addEventListener('click', onCardClick);
     startBtn.addEventListener('click', () => { resetGame(); startTimer(); });
     playAgain.addEventListener('click', () => { resetGame(); startTimer(); });
-    // prepare initial board (not started yet)
+    // initial board (not running until Start)
     resetGame();
   }
 });

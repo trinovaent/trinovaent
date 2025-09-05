@@ -16,7 +16,54 @@ img{ max-width:100%; height:auto; }
 section{ padding:4rem 1rem; scroll-margin-top:80px; }
 h2{ text-align:center; margin-bottom:2rem; font-size:2rem; color:#004889; }
 
-/* Header */
+/* === Preloader === */
+#preloader{
+  position:fixed; inset:0; z-index:2000;
+  display:grid; place-items:center;
+  background: radial-gradient(80% 70% at 50% 30%, #eaf3ff 0%, #f7f9fc 60%, #eef6ff 100%);
+  transition: opacity .5s ease .1s, visibility 0s linear .6s;
+}
+#preloader .pl-card{
+  background:#fff; border:1px solid rgba(0,0,0,.06);
+  border-radius:18px; padding:22px 24px;
+  box-shadow:0 18px 60px rgba(0,0,0,.12);
+  text-align:center; min-width:260px;
+}
+#preloader .pl-logo{
+  width:120px; height:auto; display:block; margin:0 auto 8px;
+  opacity:0; transform: translateY(6px) scale(.96);
+  animation: plLogoIn .6s cubic-bezier(.22,.61,.36,1) forwards;
+}
+#preloader .pl-sub{
+  font-weight:600; color:#0f172a; opacity:.8; margin-bottom:10px;
+}
+#preloader .pl-bar{
+  position:relative; height:4px; width:180px; overflow:hidden;
+  border-radius:999px; background: #e6eefb;
+}
+#preloader .pl-bar::before{
+  content:""; position:absolute; inset:0; transform: translateX(-100%);
+  background: linear-gradient(90deg, var(--brand-orange), var(--brand-green));
+  animation: plSweep 1.2s ease-in-out .2s 2 both;
+  border-radius:inherit;
+}
+body.loaded #preloader{
+  opacity:0; visibility:hidden; pointer-events:none;
+}
+@keyframes plLogoIn{
+  from{ opacity:0; transform: translateY(6px) scale(.96); }
+  to  { opacity:1; transform: translateY(0) scale(1); }
+}
+@keyframes plSweep{
+  0%  { transform: translateX(-100%); }
+  50% { transform: translateX(0%); }
+  100%{ transform: translateX(100%); }
+}
+@media (prefers-reduced-motion: reduce){
+  #preloader .pl-logo, #preloader .pl-bar::before{ animation:none!important; }
+}
+
+/* === Header === */
 header{
   display:flex; justify-content:space-between; align-items:center;
   position:fixed; inset-inline:0; top:0; z-index:1000;
@@ -34,7 +81,7 @@ header .logo img{ height:48px; }
 }
 .menu-icon:hover{ transform:scale(1.06); }
 
-/* Menu panel */
+/* Slide-in menu panel */
 header nav ul{
   list-style:none; margin:0; padding:2rem 1.25rem;
   position:fixed; top:0; right:-240px; height:100vh; width:220px;
@@ -57,10 +104,10 @@ header nav ul li a::after{
 }
 header nav ul li a:hover::after{ width:100%; }
 
-/* Open on hover, or via .nav-open class (JS for mobile) */
+/* Open on hover (desktop) or via .nav-open (mobile click) */
 nav:hover ul, .nav-open ul{ right:0; }
 
-/* Staggered right->left link animation when menu is open */
+/* Staggered right->left link animation when menu is open (5 links) */
 nav:hover ul li, .nav-open ul li{ animation: slideInNav .5s ease forwards; }
 nav:hover ul li:nth-child(1), .nav-open ul li:nth-child(1){ animation-delay:.10s; }
 nav:hover ul li:nth-child(2), .nav-open ul li:nth-child(2){ animation-delay:.20s; }
@@ -73,7 +120,7 @@ nav:hover ul li:nth-child(5), .nav-open ul li:nth-child(5){ animation-delay:.50s
   to{ opacity:1; transform:translateX(0); }
 }
 
-/* Hero */
+/* === Hero === */
 .hero{
   position:relative; color:#fff; height:100vh;
   display:flex; align-items:center; justify-content:center; text-align:center;
@@ -110,7 +157,7 @@ nav:hover ul li:nth-child(5), .nav-open ul li:nth-child(5){ animation-delay:.50s
 .hero-content p{ animation-delay:.6s; }
 .hero-content .btn{ animation-delay:.9s; }
 
-/* Services */
+/* === Services === */
 .services{ background-color:#f5f7fb; }
 .service-cards{ display:flex; flex-wrap:wrap; justify-content:center; gap:2rem; }
 .service-card{
@@ -122,6 +169,8 @@ nav:hover ul li:nth-child(5), .nav-open ul li:nth-child(5){ animation-delay:.50s
 .service-card:hover{ transform: translateY(-10px) scale(1.03); box-shadow:0 14px 36px rgba(0,0,0,.14); }
 .service-card .icon{ width:60px; height:60px; margin:0 auto 1rem; fill:var(--brand-blue); transition: transform .28s ease, fill .28s ease; }
 .service-card:hover .icon{ transform:scale(1.14); fill:var(--brand-orange); }
+
+/* Fly-in animations */
 @keyframes flyInLeft{ from{opacity:0;transform:translateX(-100px);} to{opacity:1;transform:translateX(0);} }
 @keyframes flyInBottom{ from{opacity:0;transform:translateY(100px);} to{opacity:1;transform:translateY(0);} }
 @keyframes flyInRight{ from{opacity:0;transform:translateX(100px);} to{opacity:1;transform:translateX(0);} }
@@ -129,10 +178,15 @@ nav:hover ul li:nth-child(5), .nav-open ul li:nth-child(5){ animation-delay:.50s
 .service-card.fly-in-bottom{ animation: flyInBottom .8s ease forwards; }
 .service-card.fly-in-right{ animation: flyInRight .8s ease forwards; }
 
-/* Divider */
-.divider{ height:80px; background:radial-gradient(120% 60% at 50% 120%, rgba(0,0,0,0.06) 0%, rgba(0,0,0,0) 60%), linear-gradient(180deg, #f5f7fb 0%, #ffffff 100%); }
+/* === Divider === */
+.divider{
+  height:80px;
+  background:
+    radial-gradient(120% 60% at 50% 120%, rgba(0,0,0,0.06) 0%, rgba(0,0,0,0) 60%),
+    linear-gradient(180deg, #f5f7fb 0%, #ffffff 100%);
+}
 
-/* Tools (Memory Game) */
+/* === Tools (Memory Game) === */
 .tools{ background:#fff; }
 .tools .tool-grid{
   max-width:1100px; margin:0 auto;
@@ -184,11 +238,11 @@ nav:hover ul li:nth-child(5), .nav-open ul li:nth-child(5){ animation-delay:.50s
 }
 .game-result[hidden]{ display:none; }
 
-/* About */
+/* === About === */
 .about{ background:#fff; max-width:900px; margin:0 auto; }
 .about p{ margin-bottom:1.2rem; text-align:justify; }
 
-/* Contact */
+/* === Contact === */
 .contact{ background:#f5f7fb; }
 .contact-info{ text-align:center; margin-bottom:2rem; }
 .contact-intro{ text-align:center; font-size:16px; margin-bottom:20px; }
@@ -198,10 +252,10 @@ nav:hover ul li:nth-child(5), .nav-open ul li:nth-child(5){ animation-delay:.50s
 .contact button{ background:#0077b6; color:#fff; padding:.75rem; border:none; border-radius:10px; font-size:1rem; cursor:pointer; transition: background-color .3s ease-in-out; }
 .contact button:hover{ background:#005f8f; }
 
-/* Footer */
+/* === Footer === */
 footer{ background:#004889; color:#fff; text-align:center; padding:1rem; font-size:.9rem; }
 
-/* Responsive */
+/* === Responsive === */
 @media (max-width: 768px){
   .hero-content h1{ font-size:2rem; }
   .hero-content p{ font-size:1rem; }
